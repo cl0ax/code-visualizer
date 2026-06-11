@@ -3,6 +3,8 @@
 set -e
 cd "$(dirname "$0")"
 mkdir -p out
-find src -name '*.java' > /tmp/viz_sources.txt
-javac -g -d out @/tmp/viz_sources.txt
+SOURCES=$(mktemp /tmp/viz_sources.XXXXXX)
+trap 'rm -f "$SOURCES"' EXIT
+find src -name '*.java' > "$SOURCES"
+javac -g -d out @"$SOURCES"
 exec java -cp out viz.Main serve --open

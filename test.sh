@@ -4,8 +4,10 @@ set -e
 cd "$(dirname "$0")"
 rm -rf out
 mkdir -p out
-find src test -name '*.java' > /tmp/viz_sources.txt
-javac -g -d out @/tmp/viz_sources.txt
+SOURCES=$(mktemp /tmp/viz_sources.XXXXXX)
+trap 'rm -f "$SOURCES"' EXIT
+find src test -name '*.java' > "$SOURCES"
+javac -g -d out @"$SOURCES"
 for t in $(cd test && ls Test*.java 2>/dev/null | sed 's/\.java//'); do
   java -cp out "$t"
 done

@@ -33,7 +33,7 @@ public final class Json {
             b.append('{'); boolean first = true;
             for (RecordComponent rc : r.getClass().getRecordComponents()) {
                 Object v;
-                try { rc.getAccessor().setAccessible(true); v = rc.getAccessor().invoke(r); }
+                try { v = rc.getAccessor().invoke(r); }
                 catch (Exception ex) { throw new RuntimeException(ex); }
                 if (!first) b.append(','); first = false;
                 writeString(rc.getName(), b); b.append(':'); writeVal(v, b);
@@ -123,13 +123,14 @@ public final class Json {
                         case '"' -> b.append('"'); case '\\' -> b.append('\\'); case '/' -> b.append('/');
                         case 'n' -> b.append('\n'); case 't' -> b.append('\t'); case 'r' -> b.append('\r');
                         case 'b' -> b.append('\b'); case 'f' -> b.append('\f');
-                        case 'u' -> { b.append((char) Integer.parseInt(s.substring(i, i + 4), 16)); i += 4; }
+                        case 'u' -> { if (i + 4 > n) throw err("truncated \\u escape"); try { b.append((char) Integer.parseInt(s.substring(i, i + 4), 16)); } catch (NumberFormatException ex) { throw err("bad \\u escape"); } i += 4; }
                         default -> throw err("bad escape");
                     }
                 } else b.append(c);
             }
         }
         Object num() {
+            if (peek() == '+') throw err("bad number");
             int start = i;
             if (peek() == '-') i++;
             boolean dbl = false;
@@ -141,7 +142,8 @@ public final class Json {
             }
             String t = s.substring(start, i);
             if (t.isEmpty() || t.equals("-")) throw err("bad number");
-            return dbl ? (Object) Double.parseDouble(t) : (Object) Long.parseLong(t);
+            try { return dbl ? (Object) Double.parseDouble(t) : (Object) Long.parseLong(t); }
+            catch (NumberFormatException e) { throw err("bad number: " + t); }
         }
     }
 }

@@ -2,7 +2,7 @@ import viz.util.Json;
 import java.util.*;
 
 public class TestJson {
-    record Pt(int x, String label) {}
+    public record Pt(int x, String label) {}
     public static void main(String[] a) {
         T.eq(Json.write(Map.of("a", 1L)), "{\"a\":1}", "map");
         T.eq(Json.write(List.of(1L, true, "x\n")), "[1,true,\"x\\n\"]", "list + escape");
@@ -13,6 +13,11 @@ public class TestJson {
         T.eq(m.get("n"), -2.5, "double");
         T.eq(m.get("i"), 7L, "integer parses as Long");
         T.eq(((List<?>) m.get("l")).get(0), null, "null in array");
+        T.eq(((List<?>) m.get("l")).get(1), false, "false in array");
+        try { Json.parse("+1"); T.check(false, "+1 should be rejected"); }
+        catch (IllegalArgumentException e) { T.check(true, "+1 rejected"); }
+        try { Json.parse("\"ab\\u00\""); T.check(false, "truncated unicode should be rejected"); }
+        catch (IllegalArgumentException e) { T.check(true, "truncated unicode rejected"); }
         T.done("TestJson");
     }
 }
