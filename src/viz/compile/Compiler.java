@@ -15,7 +15,7 @@ public final class Compiler {
 
     public record Problem(int line, String message) {}
 
-    /** classDir is null when errors is non-empty. */
+    /** classDir is null when errors is non-empty. classDir is a fresh temp directory; the caller owns its lifetime (v1 never deletes them during a session). */
     public record Result(Path classDir, List<Problem> errors, Normalized normalized) {}
 
     public static Normalized normalize(String pasted) {

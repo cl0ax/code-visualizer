@@ -67,13 +67,26 @@ public final class Inputs {
             return b.append('}').toString();
         }
         switch (ty.base) {
-            case "int", "Integer", "short", "Short", "byte", "Byte":
+            case "int", "Integer": {
+                if (v instanceof Long n) {
+                    if (n < Integer.MIN_VALUE || n > Integer.MAX_VALUE)
+                        throw new InputError(idx, "value " + n + " overflows int");
+                    return String.valueOf(n);
+                }
+                throw new InputError(idx, "expected an integer for " + type);
+            }
+            case "short", "Short", "byte", "Byte":
                 if (v instanceof Long n) return String.valueOf(n);
                 throw new InputError(idx, "expected an integer for " + type);
             case "long", "Long":
                 if (v instanceof Long n) return n + "L";
                 throw new InputError(idx, "expected an integer for " + type);
-            case "double", "Double", "float", "Float": {
+            case "float", "Float": {
+                if (v instanceof Long n) return n + ".0f";
+                if (v instanceof Double d) return d + "f";
+                throw new InputError(idx, "expected a number for " + type);
+            }
+            case "double", "Double": {
                 if (v instanceof Long n) return n + ".0";
                 if (v instanceof Double d) return d.toString();
                 throw new InputError(idx, "expected a number for " + type);
@@ -82,8 +95,8 @@ public final class Inputs {
                 if (v instanceof Boolean bo) return bo.toString();
                 throw new InputError(idx, "expected true or false");
             case "char", "Character": {
-                if (v instanceof String s && s.length() >= 1) return "'" + escChar(s.charAt(0)) + "'";
-                throw new InputError(idx, "expected a char like 'x'");
+                if (v instanceof String s && s.length() == 1) return "'" + escChar(s.charAt(0)) + "'";
+                throw new InputError(idx, "expected a single character like 'x'");
             }
             case "String":
                 if (v == null) return "null";

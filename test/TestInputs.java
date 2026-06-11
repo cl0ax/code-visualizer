@@ -24,6 +24,11 @@ public class TestInputs {
         catch (Inputs.InputError e) { T.eq(e.param, 2, "param index on error"); }
         try { Inputs.toJava(0, "int", "2.5"); T.check(false, "double into int should throw"); }
         catch (Inputs.InputError e) { T.check(e.getMessage().contains("integer"), "clear message"); }
+        try { Inputs.toJava(0, "int", "3000000000"); T.check(false, "int overflow should throw"); }
+        catch (Inputs.InputError e) { T.check(e.getMessage().contains("overflows"), "overflow message"); }
+        T.check(Inputs.toJava(0, "float", "2.5").decl().contains("2.5f"), "float suffix");
+        try { Inputs.toJava(0, "char", "\"abc\""); T.check(false, "multi-char should throw"); }
+        catch (Inputs.InputError e) { T.check(true, "multi-char rejected"); }
         T.done("TestInputs");
     }
 }
