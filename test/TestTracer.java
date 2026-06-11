@@ -42,6 +42,35 @@ public class TestTracer {
         T.eq(run.result().kind(), "return", "returned");
         T.eq(((Map<String, Object>) run.result().value()).get("v"), "12", "return value 12");
         T.check(run.notice() == null, "no notice on a clean run");
+        String exCode = """
+            class Solution {
+                public int boom(int[] nums) {
+                    int i = nums.length;
+                    return nums[i];
+                }
+            }
+            """;
+        Sig exSig = Analyzer.publicMethods(exCode).get(0);
+        var exCr = Compiler.compile(exCode, Driver.generate(exSig, List.of(Inputs.toJava(0, "int[]", "[1,2]"))));
+        Tracer.Run exRun = Tracer.run(exCr.classDir(), exSig, exCr.normalized().offset());
+        T.eq(exRun.result().kind(), "exception", "exception kind");
+        T.check(exRun.result().type().contains("ArrayIndexOutOfBounds"), "exception type");
+        T.eq(exRun.result().line(), Integer.valueOf(4), "exception line mapped");
+
+        String vCode = """
+            class Solution {
+                public void noop(int x) {
+                    int y = x + 1;
+                }
+            }
+            """;
+        Sig vSig = Analyzer.publicMethods(vCode).get(0);
+        var vCr = Compiler.compile(vCode, Driver.generate(vSig, List.of(Inputs.toJava(0, "int", "1"))));
+        Tracer.Run vRun = Tracer.run(vCr.classDir(), vSig, vCr.normalized().offset());
+        T.eq(vRun.result().kind(), "return", "void returns");
+        T.check(vRun.result().value() == null, "void result value null");
+        T.eq(vRun.result().type(), "void", "void type");
+
         T.done("TestTracer");
     }
 }

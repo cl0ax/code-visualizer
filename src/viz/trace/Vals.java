@@ -47,7 +47,8 @@ final class Vals {
             m.put("len", a.length());
             List<Object> els = new ArrayList<>();
             int n = Math.min(a.length(), MAX_ELEMENTS);
-            for (int i = 0; i < n; i++) els.add(serialize(a.getValue(i), depth + 1));
+            List<Value> vs = a.length() == 0 ? List.of() : a.getValues(0, n);
+            for (Value el : vs) els.add(serialize(el, depth + 1));
             if (a.length() > MAX_ELEMENTS) m.put("truncated", true);
             m.put("elements", els);
             return m;
@@ -89,7 +90,8 @@ final class Vals {
         m.put("len", size);
         List<Object> els = new ArrayList<>();
         int n = Math.min(size, MAX_ELEMENTS);
-        for (int i = 0; i < n; i++) els.add(serialize(data.getValue(i), depth + 1));
+        List<Value> vs = n == 0 ? List.of() : data.getValues(0, n);
+        for (Value el : vs) els.add(serialize(el, depth + 1));
         if (size > MAX_ELEMENTS) m.put("truncated", true);
         m.put("elements", els);
         return m;
@@ -111,9 +113,10 @@ final class Vals {
         } else {
             Value tableV = field(o, "table");
             if (tableV instanceof ArrayReference table) {
+                List<Value> buckets = table.length() == 0 ? List.of() : table.getValues(0, table.length());
                 outer:
-                for (int i = 0; i < table.length(); i++) {
-                    ObjectReference node = (ObjectReference) table.getValue(i);
+                for (Value bv : buckets) {
+                    ObjectReference node = (ObjectReference) bv;
                     while (node != null) {
                         if (entries.size() >= MAX_ELEMENTS) { truncated = true; break outer; }
                         entries.add(List.of(serialize(field(node, "key"), depth + 1), serialize(field(node, "value"), depth + 1)));

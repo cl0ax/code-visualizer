@@ -56,7 +56,11 @@ public final class Tracer {
                 if (remaining <= 0) {
                     result = new Trace.Result("timeout", null, null,
                             "stopped after 10s — likely an infinite loop or a blocking call", lastLine(steps));
-                    notice = "Execution stopped after 10 seconds; showing the " + steps.size() + " steps captured so far.";
+                    if (steps.size() < 10) {
+                        notice = "No line changes for 10 seconds — likely an infinite loop on a single source line (single-line loops can't be line-stepped) or a blocking call. Showing the " + steps.size() + " steps captured.";
+                    } else {
+                        notice = "Execution stopped after 10 seconds; showing the " + steps.size() + " steps captured so far.";
+                    }
                     break;
                 }
                 EventSet set = q.remove(Math.min(remaining, 250));
@@ -107,10 +111,10 @@ public final class Tracer {
                         Integer line = null;
                         try {
                             if (xe.location() != null && xe.location().declaringType().name().equals("Solution"))
-                                line = xe.location().lineNumber() - lineOffset;
+                                line = Math.max(1, xe.location().lineNumber() - lineOffset);
                         } catch (Exception ignore) {}
                         if (line == null) line = lastLine(steps);
-                        result = new Trace.Result("exception", null, type, msg, line);
+                        if (result == null) result = new Trace.Result("exception", null, type, msg, line);
                         if (stepReq != null) stepReq.disable();
                         continue;
                     }
@@ -142,7 +146,7 @@ public final class Tracer {
                 }
             }
         } catch (Exception ignore) { /* AbsentInformation etc: keep the step with whatever we got */ }
-        steps.add(new Trace.Step(steps.size(), loc.lineNumber() - off, locals, List.of(), List.of()));
+        steps.add(new Trace.Step(steps.size(), Math.max(1, loc.lineNumber() - off), locals, List.of(), List.of()));
     }
 
     private static Integer lastLine(List<Trace.Step> steps) {
