@@ -1,0 +1,8 @@
+#!/bin/bash
+# Compile and launch the visualizer web app.
+set -e
+cd "$(dirname "$0")"
+mkdir -p out
+find src -name '*.java' > /tmp/viz_sources.txt
+javac -g -d out @/tmp/viz_sources.txt
+exec java -cp out viz.Main serve --open
