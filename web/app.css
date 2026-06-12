@@ -1,0 +1,63 @@
+* { box-sizing: border-box; margin: 0; }
+body { background: #0f1117; color: #d7dae0; font: 14px/1.45 "SF Mono", Menlo, monospace; height: 100vh; }
+.hidden { display: none !important; }
+.bar { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #161a22; border-bottom: 1px solid #232936; }
+.logo { font-weight: 700; color: #8ab4ff; }
+.hint { color: #6b7383; font-size: 12px; }
+.spacer { flex: 1; }
+.label { font-size: 10px; letter-spacing: .12em; color: #6b7383; text-transform: uppercase; margin-bottom: 4px; }
+.btn { background: #1d2330; color: #d7dae0; border: 1px solid #2a3245; border-radius: 6px; padding: 6px 12px; cursor: pointer; font: inherit; display: inline-block; }
+.btn:hover { background: #242c3d; }
+.btn.primary { background: #2d51c4; border-color: #3a63e8; color: #fff; font-weight: 600; }
+.btn.primary:disabled { opacity: .45; cursor: default; }
+
+/* ---- setup ---- */
+.setup-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px; padding: 14px; height: calc(100vh - 45px); }
+.code-box { display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+#code { flex: 1; background: #11141c; color: #d7dae0; border: 1px solid #232936; border-radius: 8px; padding: 12px; font: 13px/1.5 "SF Mono", Menlo, monospace; resize: none; }
+.side { display: flex; flex-direction: column; gap: 12px; padding-top: 34px; overflow: auto; }
+.param input, #method { width: 100%; background: #11141c; color: #d7dae0; border: 1px solid #232936; border-radius: 6px; padding: 8px 10px; font: inherit; }
+.error, .field-error { color: #ff8589; font-size: 12px; margin-top: 4px; white-space: pre-wrap; }
+
+/* ---- player ---- */
+.player-grid { display: grid; grid-template-columns: 1fr 1.2fr; height: 100vh; }
+.left { display: flex; flex-direction: column; border-right: 1px solid #232936; min-width: 0; }
+.step-counter { color: #6b7383; font-size: 12px; }
+.controls { display: flex; gap: 6px; padding: 10px 14px 4px; align-items: center; }
+.controls button, .toggle button, .speeds button { background: #1d2330; color: #d7dae0; border: 1px solid #2a3245; border-radius: 6px; padding: 5px 10px; cursor: pointer; font: inherit; }
+.controls button:hover { background: #242c3d; }
+.speeds { margin-left: auto; display: flex; gap: 4px; }
+.toggle { display: flex; }
+.toggle button.on, .speeds button.on { background: #2d51c4; border-color: #3a63e8; color: #fff; }
+#scrub { margin: 6px 14px; accent-color: #4f7cff; }
+#state { flex: 1; overflow: auto; padding: 10px 14px; display: flex; flex-direction: column; gap: 10px; }
+.state-card { background: #161a22; border: 1px solid #232936; border-radius: 8px; padding: 10px 12px; }
+.state-card.flash { animation: flash .5s; }
+@keyframes flash { 0% { background: #2b3a63; } 100% { background: #161a22; } }
+.value { font-size: 15px; word-break: break-all; }
+.cells { display: flex; flex-wrap: wrap; gap: 3px; }
+.cell { text-align: center; min-width: 26px; }
+.cv { border: 1px solid #2a3245; border-radius: 4px; padding: 4px 5px; background: #11141c; min-height: 27px; }
+.ci { font-size: 9px; color: #5a6373; margin-top: 2px; }
+.cp { font-size: 10px; height: 14px; }
+.ptr { color: #8ab4ff; font-weight: 700; margin: 0 1px; }
+.ptr.red { color: #ff5c61; }
+.oob { color: #ff8589; font-size: 11px; margin-top: 4px; }
+.map .mrow { display: flex; gap: 10px; padding: 3px 0; border-bottom: 1px solid #1d2330; }
+.mk { color: #8ab4ff; min-width: 90px; word-break: break-all; }
+.empty { color: #5a6373; }
+.result.return { border-color: #2f6b43; } .result.return .value { color: #5dd882; }
+.result.exception { border-color: #79353a; } .result.exception .value { color: #ff8589; }
+.result.timeout, .result.stepcap { border-color: #806436; }
+.result.timeout .value, .result.stepcap .value { color: #ffc66b; }
+.caption { padding: 10px 14px; background: #161a22; border-top: 1px solid #232936; min-height: 40px; color: #aeb6c2; }
+#console-box { border-top: 1px solid #232936; padding: 6px 14px; color: #8a92a3; font-size: 12px; }
+#console { max-height: 120px; overflow: auto; padding: 6px 0; }
+.notice { padding: 8px 14px; background: #2a2412; color: #ffc66b; font-size: 12px; }
+
+/* ---- code panel ---- */
+.right { overflow: auto; padding: 14px 0; }
+#code-view { font: 13px/1.55 "SF Mono", Menlo, monospace; }
+.cl { display: block; padding: 0 14px; white-space: pre; }
+.cl.on { background: rgba(79, 124, 255, .16); box-shadow: inset 3px 0 0 #4f7cff; }
+.ln { display: inline-block; width: 34px; color: #4a5263; user-select: none; }

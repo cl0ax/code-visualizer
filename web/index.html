@@ -1,1 +1,73 @@
-placeholder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NeetCode Visualizer</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<section id="setup">
+  <header class="bar">
+    <span class="logo">⚡ Visualizer</span>
+    <span class="hint">paste a Solution class, give inputs, hit Visualize</span>
+  </header>
+  <div class="setup-grid">
+    <div class="code-box">
+      <div class="row">
+        <label class="btn">Load .java<input type="file" id="file" accept=".java,.txt" hidden></label>
+      </div>
+      <textarea id="code" spellcheck="false" placeholder="class Solution {
+    public boolean isPalindrome(String s) {
+        ...
+    }
+}"></textarea>
+    </div>
+    <div class="side">
+      <div id="method-box" class="hidden">
+        <div class="label">METHOD</div>
+        <select id="method"></select>
+      </div>
+      <div id="params"></div>
+      <button id="visualize" class="btn primary" disabled>Visualize ▶</button>
+      <div id="setup-errors"></div>
+    </div>
+  </div>
+</section>
+
+<section id="player" class="hidden">
+  <div class="player-grid">
+    <div class="left">
+      <header class="bar">
+        <span id="p-title" class="logo"></span>
+        <span id="p-step" class="step-counter"></span>
+        <span class="spacer"></span>
+        <div class="toggle" id="mode">
+          <button data-mode="semantic" class="on">Semantic</button><button data-mode="lines">Lines</button>
+        </div>
+        <button id="edit" class="btn">✎ Edit code</button>
+      </header>
+      <div class="controls">
+        <button id="c-first" title="first">⏮</button>
+        <button id="c-prev" title="prev">◀</button>
+        <button id="c-play">▷ Play</button>
+        <button id="c-next" title="next">▶</button>
+        <button id="c-last" title="last">⏭</button>
+        <div class="speeds" id="speeds">
+          <button data-s="0.5">0.5x</button><button data-s="1" class="on">1x</button><button data-s="2">2x</button>
+        </div>
+      </div>
+      <input type="range" id="scrub" min="0" max="0" value="0">
+      <div id="state"></div>
+      <div id="caption" class="caption"></div>
+      <details id="console-box"><summary>console</summary><pre id="console"></pre></details>
+      <div id="notice" class="notice hidden"></div>
+    </div>
+    <div class="right"><pre id="code-view"></pre></div>
+  </div>
+</section>
+
+<script src="/renderers.js"></script>
+<script src="/player.js"></script>
+<script src="/setup.js"></script>
+</body>
+</html>
