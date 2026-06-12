@@ -20,11 +20,12 @@ public class TestTracerEnds {
         T.eq(hang.result().kind(), "timeout", "timeout kind");
         T.check(hang.notice() != null, "timeout notice present");
 
-        // 3) Tight infinite loop → step cap (or timeout on a very slow machine; both honest stops)
+        // conditioned loop → line transitions → genuine stepcap (timeout tolerated for very slow machines)
         Tracer.Run spin = run("bench/spin/Solution.java", "0");
         T.check(spin.result().kind().equals("stepcap") || spin.result().kind().equals("timeout"),
                 "spin stopped, got " + spin.result().kind());
         T.check(spin.notice() != null, "spin notice present");
+        T.check(spin.steps().size() >= 100, "spin produced real step events, got " + spin.steps().size());
         T.done("TestTracerEnds");
     }
 

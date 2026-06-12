@@ -1,7 +1,8 @@
 class Solution {
     public int spin(int x) {
-        while (true) {
+        while (x < Integer.MAX_VALUE) {
             x++;
         }
+        return x;
     }
 }
