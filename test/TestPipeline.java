@@ -5,6 +5,15 @@ import java.util.*;
 public class TestPipeline {
     @SuppressWarnings("unchecked")
     public static void main(String[] a) throws Exception {
+        // 0) Analyze wire-format coverage — round-trip through JSON serialization
+        String pcode = Files.readString(Path.of("bench/valid-palindrome/Solution.java"));
+        @SuppressWarnings("unchecked")
+        Map<String, Object> an = (Map<String, Object>) Json.parse(Json.write(viz.Pipeline.analyze(pcode)));
+        T.eq(an.get("ok"), true, "analyze ok over wire");
+        List<Map<String, Object>> ms = (List<Map<String, Object>>) (List<?>) an.get("methods");
+        T.eq(ms.get(0).get("name"), "isPalindrome", "analyze method name");
+        T.eq(((List<?>) ms.get(0).get("params")).size(), 1, "analyze param count");
+
         // 1) Valid Palindrome (accepted) — classic input → true; pointers bound to charStr
         Map<String, Object> t1 = run("bench/valid-palindrome/Solution.java",
                 List.of("\"A man, a plan, a canal: Panama\""));
