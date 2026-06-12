@@ -42,6 +42,7 @@ body { background: #0f1117; color: #d7dae0; font: 14px/1.45 "SF Mono", Menlo, mo
 .cp { font-size: 10px; height: 14px; }
 .ptr { color: #8ab4ff; font-weight: 700; margin: 0 1px; }
 .ptr.red { color: #ff5c61; }
+.ptr.far { color: #d8a657; }
 .oob { color: #ff8589; font-size: 11px; margin-top: 4px; }
 .map .mrow { display: flex; gap: 10px; padding: 3px 0; border-bottom: 1px solid #1d2330; }
 .mk { color: #8ab4ff; min-width: 90px; word-break: break-all; }
@@ -58,6 +59,6 @@ body { background: #0f1117; color: #d7dae0; font: 14px/1.45 "SF Mono", Menlo, mo
 /* ---- code panel ---- */
 .right { overflow: auto; padding: 14px 0; }
 #code-view { font: 13px/1.55 "SF Mono", Menlo, monospace; }
-.cl { display: block; padding: 0 14px; white-space: pre; }
+.cl { display: block; padding: 0 14px; white-space: pre; width: max-content; min-width: 100%; }
 .cl.on { background: rgba(79, 124, 255, .16); box-shadow: inset 3px 0 0 #4f7cff; }
 .ln { display: inline-block; width: 34px; color: #4a5263; user-select: none; }

@@ -35,7 +35,15 @@
   }
 
   function render() {
-    const step = currentStep();
+    let step = currentStep();
+    if (mode === 'semantic') {
+      const g = seq()[idx];
+      const changedUnion = new Set();
+      for (let i = g.from; i <= g.to; i++) {
+        for (const c of (trace.steps[i].changed || [])) changedUnion.add(c);
+      }
+      step = { ...step, changed: [...changedUnion] };
+    }
     el('p-step').textContent = 'Step ' + (idx + 1) + ' / ' + seq().length;
     el('scrub').value = idx;
     el('caption').textContent = caption();

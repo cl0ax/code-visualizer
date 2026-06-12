@@ -10,6 +10,8 @@
 
   let methods = [];
   let debounce = null;
+  let analyzeSeq = 0;
+  let lastParamsJson = null;
 
   window.esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
@@ -23,6 +25,7 @@
       codeEl.value = await fileEl.files[0].text();
       analyze();
     }
+    fileEl.value = '';
   });
 
   methodEl.addEventListener('change', renderParams);
@@ -32,14 +35,27 @@
     errorsEl.innerHTML = '';
     const code = codeEl.value;
     if (!code.trim()) { methods = []; renderParams(); return; }
+    const seq = ++analyzeSeq;
     const res = await fetch('/api/analyze', { method: 'POST', body: JSON.stringify({ code }) })
       .then(r => r.json());
+    if (seq !== analyzeSeq) return;
     if (!res.ok) { methods = []; showErrors([{ message: res.error }]); renderParams(); return; }
+    const prevName = current()?.name;
+    const prevParamsJson = lastParamsJson;
     methods = res.methods;
     methodBox.classList.toggle('hidden', methods.length < 2);
     methodEl.innerHTML = methods.map((m, i) =>
       `<option value="${i}">${esc(m.name)}(${m.params.map(p => esc(p.type)).join(', ')})</option>`).join('');
-    renderParams();
+    if (prevName) {
+      const newIdx = methods.findIndex(m => m.name === prevName);
+      if (newIdx !== -1) methodEl.value = String(newIdx);
+    }
+    const newMethod = current();
+    if (newMethod && JSON.stringify(newMethod.params) === prevParamsJson) {
+      // params unchanged — keep user-typed values
+    } else {
+      renderParams();
+    }
   }
 
   function current() { return methods[Number(methodEl.value) || 0]; }
@@ -47,7 +63,8 @@
   function renderParams() {
     const m = current();
     paramsEl.innerHTML = '';
-    if (!m) { vizBtn.disabled = true; return; }
+    if (!m) { vizBtn.disabled = true; lastParamsJson = null; return; }
+    lastParamsJson = JSON.stringify(m.params);
     m.params.forEach((p, i) => {
       const div = document.createElement('div');
       div.className = 'param';

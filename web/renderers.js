@@ -13,7 +13,7 @@
         (byTarget[target] ??= []).push(ptr);
     }
     for (const [name, val] of Object.entries(locals)) {
-      if (pointers[name] && locals[pointers[name]]) continue;  // drawn under its target instead
+      if (pointers[name] && locals[pointers[name]] && (locals[name].kind === 'int' || locals[name].kind === 'long')) continue;  // drawn under its target instead
       root.appendChild(card(name, val, byTarget[name] || [], locals, changed));
     }
     if (last && trace.result) root.appendChild(resultCard(trace.result));
@@ -39,23 +39,31 @@
 
   function cells(val, ptrs, locals) {
     const es = elems(val);
+    const shown = es.length;
     const len = Number(val.len ?? es.length);
     let h = '<div class="cells">';
     for (let i = 0; i < es.length; i++) {
       const cv = es[i] === ' ' ? '&nbsp;' : esc(es[i]);
       h += `<div class="cell"><div class="cv">${cv}</div><div class="ci">${i}</div>` +
-           `<div class="cp">${marks(ptrs, locals, i, len)}</div></div>`;
+           `<div class="cp">${marks(ptrs, locals, i, len, shown)}</div></div>`;
     }
     h += '</div>';
     const out = ptrs.filter(p => oob(locals[p], len));
-    if (out.length)
-      h += `<div class="oob">${out.map(p => `${esc(p)}=${esc(locals[p].v)} out of range`).join(', ')}</div>`;
+    const far = ptrs.filter(p => !oob(locals[p], len) && Number(locals[p].v) >= shown && Number(locals[p].v) <= len - 1);
+    const notices = out.map(p => `${esc(p)}=${esc(locals[p].v)} out of range`)
+      .concat(far.map(p => `${esc(p)}=${esc(locals[p].v)} (beyond shown cells)`));
+    if (notices.length)
+      h += `<div class="oob">${notices.join(', ')}</div>`;
     return h;
   }
 
-  function marks(ptrs, locals, i, len) {
-    return ptrs.filter(p => clampi(locals[p], len) === i)
-      .map(p => `<span class="ptr${oob(locals[p], len) ? ' red' : ''}">${esc(p)}</span>`).join('');
+  function marks(ptrs, locals, i, len, shown) {
+    return ptrs.filter(p => Math.max(0, Math.min(shown - 1, Number(locals[p].v))) === i)
+      .map(p => {
+        const n = Number(locals[p].v);
+        const cls = oob(locals[p], len) ? ' red' : (n >= shown && n <= len - 1 ? ' far' : '');
+        return `<span class="ptr${cls}">${esc(p)}</span>`;
+      }).join('');
   }
 
   function clampi(v, len) { return Math.max(0, Math.min(len - 1, Number(v.v))); }
@@ -81,7 +89,7 @@
     const div = document.createElement('div');
     div.className = 'state-card result ' + result.kind;
     if (result.kind === 'return')
-      div.innerHTML = `<div class="label">RESULT</div><div class="value">${esc(short(result.value))}</div>`;
+      div.innerHTML = `<div class="label">RESULT</div><div class="value">${result.type === 'void' ? '(void)' : esc(short(result.value))}</div>`;
     else if (result.kind === 'exception')
       div.innerHTML = `<div class="label">EXCEPTION</div><div class="value">${esc(result.type)}` +
         `${result.message ? ': ' + esc(result.message) : ''}` +
