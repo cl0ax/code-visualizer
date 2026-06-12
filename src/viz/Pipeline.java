@@ -65,6 +65,7 @@ public final class Pipeline {
                     run.console(), run.notice()));
             return out;
         } catch (Exception e) {
+            e.printStackTrace();
             out.put("ok", false); out.put("stage", "trace"); out.put("error", String.valueOf(e));
             return out;
         }

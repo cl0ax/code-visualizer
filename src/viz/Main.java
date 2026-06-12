@@ -2,6 +2,7 @@ package viz;
 
 import viz.server.Server;
 import viz.util.Json;
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
@@ -13,7 +14,14 @@ public final class Main {
             return;
         }
         if (args[0].equals("trace") && args.length >= 2) {
-            String code = Files.readString(Path.of(args[1]));
+            String code;
+            try {
+                code = Files.readString(Path.of(args[1]));
+            } catch (IOException e) {
+                System.err.println("error: cannot read " + args[1] + ": " + e.getMessage());
+                System.exit(1);
+                return;
+            }
             List<String> inputs = new ArrayList<>(Arrays.asList(args).subList(2, args.length));
             System.out.println(Json.write(Pipeline.trace(code, inputs, null)));
             return;

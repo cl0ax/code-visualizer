@@ -60,7 +60,7 @@ public final class Analyzer {
         return last;
     }
 
-    static String stripCommentsAndStrings(String src) {
+    public static String stripCommentsAndStrings(String src) {
         src = src.replaceAll("(?s)/\\*.*?\\*/", " ");
         src = src.replaceAll("//[^\n]*", " ");
         src = src.replaceAll("\"(\\\\.|[^\"\\\\])*\"", "\"\"");

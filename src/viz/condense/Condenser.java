@@ -12,6 +12,7 @@ public final class Condenser {
         List<Trace.Group> out = new ArrayList<>();
         if (steps.isEmpty()) return out;
 
+        // Known v1 limitation: with two sequential top-level loops, the smaller head wins and later loops are absorbed into the final group (wrong-but-graceful).
         int head = Integer.MAX_VALUE;
         for (int i = 1; i < steps.size(); i++)
             if (steps.get(i).line() < steps.get(i - 1).line())

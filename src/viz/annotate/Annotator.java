@@ -1,5 +1,6 @@
 package viz.annotate;
 
+import viz.driver.Analyzer;
 import viz.model.Trace;
 import java.util.*;
 import java.util.regex.*;
@@ -18,6 +19,7 @@ public final class Annotator {
 
     public static Map<String, String> pointers(String source, List<Trace.Step> steps) {
         Set<String> ints = new HashSet<>(), targets = new HashSet<>();
+        source = Analyzer.stripCommentsAndStrings(source);
         for (Trace.Step s : steps) {
             for (var e : s.locals().entrySet()) {
                 Object kind = ((Map<?, ?>) e.getValue()).get("kind");

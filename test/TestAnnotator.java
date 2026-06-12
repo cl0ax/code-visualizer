@@ -18,6 +18,8 @@ public class TestAnnotator {
         T.eq(p.get("k"), null, "string local is not a pointer");
         T.eq(Annotator.pointers("int q = m.get(key);", steps).get("key"), null,
                 "unknown locals never bind");
+        Map<String, String> c = Annotator.pointers("// arr[l] = 0;\nint q = s.charAt(l);", steps);
+        T.eq(c.get("l"), "s", "commented-out code does not bind");
         T.done("TestAnnotator");
     }
 }
