@@ -1,2 +1,6 @@
 out/
 .DS_Store
+.idea/
+*.iml
+*.code-workspace
+package-lock.json
