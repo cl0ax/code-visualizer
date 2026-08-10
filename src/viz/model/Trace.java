@@ -3,7 +3,7 @@ package viz.model;
 import java.util.List;
 import java.util.Map;
 
-/** The trace JSON contract (see Design.md). The frontend consumes this and nothing else.
+/** The trace JSON contract. The frontend consumes this and nothing else.
  *  Local values ("Val"s) are nested Maps shaped {kind, v?, len?, elements?, entries?, type?, truncated?}. */
 public record Trace(
         String source,
