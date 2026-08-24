@@ -112,19 +112,8 @@ empty state.
 ./test.sh
 ```
 
-13 test classes, 324 assertions, no test framework. They are plain `main`
-methods with an assertion helper, in keeping with the zero dependency rule.
-
-```
-PASS TestAnalyzer (9 checks)          PASS TestModel (3 checks)
-PASS TestAnnotator (5 checks)         PASS TestPipeline (186 checks)
-PASS TestCompiler (10 checks)         PASS TestPipelineUnit (14 checks)
-PASS TestCondenser (10 checks)        PASS TestTracer (25 checks)
-PASS TestDriver (7 checks)            PASS TestTracerEnds (13 checks)
-PASS TestInputs (19 checks)           PASS TestTracerValues (12 checks)
-PASS TestJson (11 checks)
-ALL TESTS PASS
-```
+No test framework: the tests are plain `main` methods with an assertion
+helper, in keeping with the zero dependency rule.
 
 `bench/` holds fixtures that exist to prove the failure paths, not the happy
 one: a program that hangs, one that reads out of bounds, one that spins, and a
