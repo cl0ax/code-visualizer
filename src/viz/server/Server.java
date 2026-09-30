@@ -26,7 +26,7 @@ public final class Server {
     public static void start(int preferredPort, boolean open) throws IOException {
         Path webRoot = Path.of("web").toAbsolutePath().normalize();
         if (!Files.isDirectory(webRoot))
-            throw new IOException("web/ not found at " + webRoot + " — run from the repo root");
+            throw new IOException("web/ not found at " + webRoot + " - run from the repo root");
         Path realRoot = webRoot.toRealPath();
 
         HttpServer server = null;

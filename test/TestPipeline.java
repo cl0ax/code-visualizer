@@ -5,7 +5,7 @@ import java.util.*;
 public class TestPipeline {
     @SuppressWarnings("unchecked")
     public static void main(String[] a) throws Exception {
-        // 0) Analyze wire-format coverage — round-trip through JSON serialization
+        // 0) Analyze wire-format coverage - round-trip through JSON serialization
         String pcode = Files.readString(Path.of("bench/valid-palindrome/Solution.java"));
         @SuppressWarnings("unchecked")
         Map<String, Object> an = (Map<String, Object>) Json.parse(Json.write(viz.Pipeline.analyze(pcode)));
@@ -14,7 +14,7 @@ public class TestPipeline {
         T.eq(ms.get(0).get("name"), "isPalindrome", "analyze method name");
         T.eq(((List<?>) ms.get(0).get("params")).size(), 1, "analyze param count");
 
-        // 1) Valid Palindrome (accepted) — classic input → true; pointers bound to charStr
+        // 1) Valid Palindrome (accepted) - classic input → true; pointers bound to charStr
         Map<String, Object> t1 = run("bench/valid-palindrome/Solution.java",
                 List.of("\"A man, a plan, a canal: Panama\""));
         eqReturn(t1, "true", "palindrome true");
@@ -26,7 +26,7 @@ public class TestPipeline {
         // 2) The real first-submit WA code → reproduces the wrong answer (false) on the failing input
         Map<String, Object> t2 = run("bench/valid-palindrome-wa/Solution.java",
                 List.of("\"Was it a car or a cat I saw?\""));
-        eqReturn(t2, "false", "WA reproduced — the debugging use case");
+        eqReturn(t2, "false", "WA reproduced - the debugging use case");
 
         // 3) Two Sum brute force → [0, 1]
         Map<String, Object> t3 = run("bench/two-sum/Solution.java", List.of("[2,7,11,15]", "9"));
@@ -57,7 +57,7 @@ public class TestPipeline {
         T.done("TestPipeline");
     }
 
-    /** Runs the pipeline and round-trips through JSON — asserting the exact wire format. */
+    /** Runs the pipeline and round-trips through JSON - asserting the exact wire format. */
     @SuppressWarnings("unchecked")
     static Map<String, Object> run(String file, List<String> inputs) throws Exception {
         String code = Files.readString(Path.of(file));

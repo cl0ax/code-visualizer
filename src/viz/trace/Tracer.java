@@ -55,9 +55,9 @@ public final class Tracer {
                 long remaining = deadline - System.currentTimeMillis();
                 if (remaining <= 0) {
                     result = new Trace.Result("timeout", null, null,
-                            "stopped after 10s — likely an infinite loop or a blocking call", lastLine(steps));
+                            "stopped after 10s - likely an infinite loop or a blocking call", lastLine(steps));
                     if (steps.size() < 10) {
-                        notice = "No line changes for 10 seconds — likely an infinite loop on a single source line (single-line loops can't be line-stepped) or a blocking call. Showing the " + steps.size() + " steps captured.";
+                        notice = "No line changes for 10 seconds - likely an infinite loop on a single source line (single-line loops can't be line-stepped) or a blocking call. Showing the " + steps.size() + " steps captured.";
                     } else {
                         notice = "Execution stopped after 10 seconds; showing the " + steps.size() + " steps captured so far.";
                     }
@@ -92,7 +92,7 @@ public final class Tracer {
                         snapshot(steps, se.location(), se.thread(), vals, lineOffset);
                         if (steps.size() >= STEP_CAP) {
                             result = new Trace.Result("stepcap", null, null, "step cap reached", lastLine(steps));
-                            notice = "Stopped at the " + STEP_CAP + "-step cap — likely an infinite loop.";
+                            notice = "Stopped at the " + STEP_CAP + "-step cap - likely an infinite loop.";
                             done = true;
                         }
                         continue;

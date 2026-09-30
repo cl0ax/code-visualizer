@@ -18,7 +18,7 @@ public final class Pipeline {
         List<Sig> methods = Analyzer.publicMethods(code == null ? "" : code);
         if (methods.isEmpty()) {
             out.put("ok", false);
-            out.put("error", "No public method found — expose one public method on class Solution.");
+            out.put("error", "No public method found - expose one public method on class Solution.");
         } else {
             out.put("ok", true);
             out.put("methods", methods);
@@ -31,7 +31,7 @@ public final class Pipeline {
         List<Sig> methods = Analyzer.publicMethods(code == null ? "" : code);
         if (methods.isEmpty()) {
             out.put("ok", false); out.put("stage", "analyze");
-            out.put("error", "No public method found — expose one public method on class Solution.");
+            out.put("error", "No public method found - expose one public method on class Solution.");
             return out;
         }
         Sig sig = methods.get(0);

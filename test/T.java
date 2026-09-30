@@ -6,7 +6,7 @@ public final class T {
         if (!cond) { System.err.println("FAIL: " + msg); System.exit(1); }
     }
     public static void eq(Object actual, Object expected, String msg) {
-        check(java.util.Objects.equals(actual, expected), msg + " — expected " + expected + " but got " + actual);
+        check(java.util.Objects.equals(actual, expected), msg + " - expected " + expected + " but got " + actual);
     }
     public static void done(String name) { System.out.println("PASS " + name + " (" + checks + " checks)"); }
 }

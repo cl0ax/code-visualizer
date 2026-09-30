@@ -52,7 +52,7 @@
     }
     const newMethod = current();
     if (newMethod && JSON.stringify(newMethod.params) === prevParamsJson) {
-      // params unchanged — keep user-typed values
+      // params unchanged - keep user-typed values
     } else {
       renderParams();
     }

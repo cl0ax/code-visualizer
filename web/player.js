@@ -29,9 +29,9 @@
   }
 
   function caption() {
-    if (mode === 'semantic') { const g = seq()[idx]; return g.label + ' — ' + g.caption; }
+    if (mode === 'semantic') { const g = seq()[idx]; return g.label + ' - ' + g.caption; }
     const s = trace.steps[idx];
-    return 'line ' + s.line + (s.changed.length ? ' — changed: ' + s.changed.join(', ') : '');
+    return 'line ' + s.line + (s.changed.length ? ' - changed: ' + s.changed.join(', ') : '');
   }
 
   function render() {

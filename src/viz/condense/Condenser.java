@@ -4,7 +4,7 @@ import viz.model.Trace;
 import java.util.*;
 
 /** Groups raw steps into semantic steps: init, one per outermost-loop iteration, result.
- *  Captions are templates over real state diffs — never invented. */
+ *  Captions are templates over real state diffs - never invented. */
 public final class Condenser {
     private Condenser() {}
 
@@ -67,10 +67,10 @@ public final class Condenser {
     static String resultText(Trace.Result r) {
         if (r == null) return "";
         return switch (r.kind()) {
-            case "return" -> r.value() == null ? " — done" : " — return " + brief(r.value());
-            case "exception" -> " — threw " + r.type() + (r.message() == null ? "" : ": " + r.message());
-            case "timeout" -> " — timed out";
-            case "stepcap" -> " — step cap reached";
+            case "return" -> r.value() == null ? " - done" : " - return " + brief(r.value());
+            case "exception" -> " - threw " + r.type() + (r.message() == null ? "" : ": " + r.message());
+            case "timeout" -> " - timed out";
+            case "stepcap" -> " - step cap reached";
             default -> "";
         };
     }
