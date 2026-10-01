@@ -1,17 +1,33 @@
-# Code Visualizer
+<h1 align="center">Code Visualizer</h1>
 
-Step through the **real execution** of a Java method in the browser: line
-highlighting, live variable state, and pointer markers over arrays and strings.
+<p align="center">
+  Step through the real execution of a Java method in the browser: line highlighting, live variable state, and pointer markers over arrays and strings.
+</p>
+
+<p align="center">
+  <a href="#features">Features</a> ·
+  <a href="#how-it-works">How it works</a> ·
+  <a href="#guardrails">Guardrails</a> ·
+  <a href="#notes">Notes</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/language-Java%2020%2B-orange" alt="Java 20 or newer">
+  <img src="https://img.shields.io/badge/debugger-Java%20Debug%20Interface-blue" alt="Java Debug Interface">
+  <img src="https://img.shields.io/badge/dependencies-none-lightgrey" alt="No external dependencies">
+  <img src="https://img.shields.io/badge/tests-13%20suites%20passing-brightgreen" alt="13 test suites passing">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license"></a>
+</p>
+
+<p align="center">
+  <img src="docs/demo.gif" width="720" alt="Stepping through isPalindrome(&quot;racecar&quot;)">
+</p>
 
 Paste a `class Solution`, give it inputs, press Visualize.
-
-![Stepping through isPalindrome("racecar")](docs/demo.gif)
 
 Existing visualizers animate a *model* of your code. This one attaches a real
 debugger to a real JVM and reports what actually happened, so what you see is
 your program's behavior rather than an approximation of it.
-
-Zero external dependencies. It compiles with `javac` and runs on a JDK.
 
 ```bash
 ./visualize          # compile and serve at http://localhost:4747
@@ -19,6 +35,51 @@ Zero external dependencies. It compiles with `javac` and runs on a JDK.
 ```
 
 Requires a JDK 20 or newer (it uses the JDK's own compiler and debugger APIs).
+
+## Features
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <b>Real execution, not a model</b><br>
+      Your code runs in a separate JVM under the Java Debug Interface, and every step shows the values actually on the stack frame.
+    </td>
+    <td width="50%" valign="top">
+      <b>Line highlighting and state cards</b><br>
+      The current line is highlighted, and each local variable gets a card: arrays with index labels, maps and scalars.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <b>Pointer markers</b><br>
+      It detects which local is indexing which collection (<code>arr[i]</code>, <code>s.charAt(l)</code>) and draws a marker under the right cell.
+    </td>
+    <td width="50%" valign="top">
+      <b>Semantic and line modes</b><br>
+      Semantic mode groups raw steps so a hundred step loop reads as "iteration 4". Line mode shows every line. A scrubber and playback speed control both.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <b>Typed inputs</b><br>
+      Input literals like <code>[1,2,3]</code>, <code>{"a":1}</code> and <code>'c'</code> are parsed into real Java values. Malformed input is reported on the field instead of crashing.
+    </td>
+    <td width="50%" valign="top">
+      <b>Guardrails</b><br>
+      A 10 second timeout and a 2,000 step cap stop runaway programs, and the child JVM is destroyed during cleanup.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <b>Headless use</b><br>
+      The tracer runs without the UI and prints the trace JSON on stdout, which is how most of the tests drive it.
+    </td>
+    <td width="50%" valign="top">
+      <b>Zero dependencies</b><br>
+      No Maven, Gradle or npm. It compiles with <code>javac</code>, and the tests are plain <code>main</code> methods.
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -150,9 +211,13 @@ Prints the trace JSON on stdout.
 
 ---
 
-## Known limits
+## Notes
 
-Stated up front, because they are the first things you would hit:
+I hit the paywall on NeetCode's code visualizer in the middle of a LeetCode practice
+session, and rather than pay for it I wrote my own. It runs locally; there is no hosted
+instance.
+
+Known limits, stated up front because they are the first things you would hit:
 
 - The traced class must expose a public method the analyzer can read, normally
   on `class Solution`, and every parameter type must be one `Inputs` supports.
